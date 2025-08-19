@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face and Health Metrics Demo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    video, canvas {
+      border: 2px solid #444;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    h1 {
+      margin-top: 20px;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Face & Health Metrics (Demo)</h1>
+  <video id="video" width="640" height="480" autoplay muted></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+
+  <script>
+    // Grab video element
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Request camera access
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Camera access denied: " + err);
+      });
+
+    // Fake health metrics generator
+    function randomBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function draw() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Random values to simulate metrics
+      const heartRate = randomBetween(60, 100);
+      const respRate = randomBetween(12, 20);
+      const stress = randomBetween(40, 80);
+
+      // Display metrics on top left
+      ctx.fillStyle = "lime";
+      ctx.font = "20px Arial";
+      ctx.fillText("Heart Rate: " + heartRate + " BPM", 10, 30);
+      ctx.fillStyle = "yellow";
+      ctx.fillText("Respiratory Rate: " + respRate + " BPM", 10, 60);
+      ctx.fillStyle = "red";
+      ctx.fillText("Stress Index: " + stress, 10, 90);
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
